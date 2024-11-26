@@ -9,6 +9,7 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 async function main() {
   try {
+    console.log("REDIS_URL:", REDIS_URL);
     console.log("Connecting to Redis...");
 
     // Create a Redis client
