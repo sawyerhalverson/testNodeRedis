@@ -3,7 +3,7 @@ import Redis from 'ioredis';
 // Redis connection string from environment variable
 const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
-// Connect to Redis when app starts
+// Create a new Redis instance
 const redis = new Redis(redisUrl);
 
 redis.on('connect', () => {
@@ -17,12 +17,20 @@ redis.on('error', (err) => {
 // Example of your server start logic
 const startServer = async () => {
   try {
-    // Wait for Redis to be ready before starting server
-    await redis.connect();
+    // Wait for Redis to connect
+    await new Promise<void>((resolve, reject) => {
+      redis.on('connect', resolve);
+      redis.on('error', reject);
+    });
 
     // Your app logic here...
     console.log('App is ready to handle traffic!');
-    // Start your HTTP server, etc.
+    
+    // Start your HTTP server
+    // Assuming you have an Express app, you can start it like this:
+    // app.listen(PORT, () => {
+    //   console.log(`Server is running on http://localhost:${PORT}`);
+    // });
 
   } catch (err) {
     console.error('Failed to start server:', err);
